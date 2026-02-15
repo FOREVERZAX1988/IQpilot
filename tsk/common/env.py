@@ -17,8 +17,8 @@ PAYLOAD_PATH = "/data/openpilot/tsk/common/payload.bin"
 # Default is set up for an IQ.Pilot bootstrap flow:
 # - users first install this repo's `tskm` branch
 # - then choose "Install" which swaps in the `release` branch.
-RECOMMENDED_REPO_URL = os.getenv("TSK_RECOMMENDED_REPO_URL", "https://github.com/IQ-Lvbs/iqpilot.git")
-RECOMMENDED_REPO_LABEL = os.getenv("TSK_RECOMMENDED_REPO_LABEL", "IQ-Lvbs/iqpilot")
+RECOMMENDED_REPO_URL = os.getenv("TSK_RECOMMENDED_REPO_URL", "https://github.com/IQ-Lvbs/openpilot.git")
+RECOMMENDED_REPO_LABEL = os.getenv("TSK_RECOMMENDED_REPO_LABEL", "IQ-Lvbs/openpilot")
 RECOMMENDED_OP_BRANCH = os.getenv("TSK_RECOMMENDED_BRANCH", "release")
 RECOMMENDED_OP_DIR = f"{COMMA_DATA_DIR}/tsk-recommended"
 
