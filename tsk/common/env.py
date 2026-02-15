@@ -13,12 +13,14 @@ CONTINUE_FILE = f"{COMMA_DATA_DIR}/continue.sh"
 OPENPILOT_DIR = f"{COMMA_DATA_DIR}/openpilot"
 PAYLOAD_PATH = "/data/openpilot/tsk/common/payload.bin"
 
-RECOMMENDED_OP_USER = "commaai"
-RECOMMENDED_OP_BRANCH = "nightly-dev"
+# Repo/branch that the TSK Manager will install when the user chooses "Install".
+# Default is set up for an IQ.Pilot bootstrap flow:
+# - users first install this repo's `tskm` branch
+# - then choose "Install" which swaps in the `release` branch.
+RECOMMENDED_REPO_URL = os.getenv("TSK_RECOMMENDED_REPO_URL", "https://github.com/IQ-Lvbs/iqpilot.git")
+RECOMMENDED_REPO_LABEL = os.getenv("TSK_RECOMMENDED_REPO_LABEL", "IQ-Lvbs/iqpilot")
+RECOMMENDED_OP_BRANCH = os.getenv("TSK_RECOMMENDED_BRANCH", "release")
 RECOMMENDED_OP_DIR = f"{COMMA_DATA_DIR}/tsk-recommended"
-ALTERNATE_OP_USER = "sunnypilot"
-ALTERNATE_OP_BRANCH = "dev"
-ALTERNATE_OP_DIR = f"{COMMA_DATA_DIR}/tsk-alternate"
 
 
 def is_calvins_comma() -> bool:

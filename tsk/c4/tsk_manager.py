@@ -15,13 +15,7 @@ from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.widgets import Widget
 from openpilot.system.ui.widgets.scroller import Scroller
 from tsk.c4.menu_0_tools.btn_0_extractor import Extractor
-from tsk.c4.menu_0_tools.btn_1_keyboard import Keyboard
-from tsk.c4.menu_0_tools.btn_2_uninstaller import Uninstaller
-from tsk.c4.menu_0_tools.btn_3_guide import Guide
 from tsk.c4.menu_1_reboot.btn_0_recommended import Recommended
-from tsk.c4.menu_1_reboot.btn_1_alternate import Alternate
-from tsk.c4.menu_1_reboot.btn_2_somethingelse import SomethingElse
-from tsk.c4.menu_1_reboot.btn_3_reboot import Reboot
 from tsk.c4.ui import Layout, ScrollableBigDialog
 from tsk.common.key_file_manager import KeyFileManager
 from tsk.common.widget import TSKWidget
@@ -129,9 +123,6 @@ class TSKManager(TSKWidget):
     self.tools_scroller = Scroller(
       [
         Extractor(),
-        # Keyboard(),
-        Uninstaller(),
-        Guide(),
       ],
       horizontal=True,
       snap_items=False,
@@ -144,9 +135,6 @@ class TSKManager(TSKWidget):
     self.reboot_scroller = Scroller(
       [
         Recommended(),
-        Alternate(),
-        SomethingElse(),
-        Reboot(),
       ],
       horizontal=True,
       snap_items=False,

@@ -31,12 +31,10 @@ import pyray as rl
 # Local imports
 from openpilot.system.ui.lib.application import gui_app
 from tsk.common.env import (
-  RECOMMENDED_OP_USER,
+  RECOMMENDED_REPO_URL,
+  RECOMMENDED_REPO_LABEL,
   RECOMMENDED_OP_BRANCH,
   RECOMMENDED_OP_DIR,
-  ALTERNATE_OP_USER,
-  ALTERNATE_OP_BRANCH,
-  ALTERNATE_OP_DIR
 )
 
 # -------------------------------------------------------------------------
@@ -278,32 +276,16 @@ class PrefetchAppC3:
 
     # Check if the recommended openpilot directory exists
     recommended_exists = os.path.exists(RECOMMENDED_OP_DIR)
-    # Check if the alternate openpilot directory exists
-    alternate_exists = os.path.exists(ALTERNATE_OP_DIR)
-
     # Only create operation for recommended repository if directory doesn't exist
     if not recommended_exists:
       self.clone_operations.append(
         GitCloneProgress(
           ["/usr/bin/git", "clone", "--progress",
-           f"https://github.com/{RECOMMENDED_OP_USER}/openpilot.git",
+           RECOMMENDED_REPO_URL,
            "-b", RECOMMENDED_OP_BRANCH, "--depth=1",
-           "--recurse-submodules", RECOMMENDED_OP_DIR],
-          f"{RECOMMENDED_OP_USER}/{RECOMMENDED_OP_BRANCH}",
+           RECOMMENDED_OP_DIR],
+          f"{RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}",
           RECOMMENDED_OP_DIR  # Target directory to delete before cloning
-        )
-      )
-
-    # Only create operation for alternate repository if directory doesn't exist
-    if not alternate_exists:
-      self.clone_operations.append(
-        GitCloneProgress(
-          ["/usr/bin/git", "clone", "--progress",
-           f"https://github.com/{ALTERNATE_OP_USER}/openpilot.git",
-           "-b", ALTERNATE_OP_BRANCH, "--depth=1",
-           "--recurse-submodules", ALTERNATE_OP_DIR],
-          f"{ALTERNATE_OP_USER}/{ALTERNATE_OP_BRANCH}",
-          ALTERNATE_OP_DIR  # Target directory to delete before cloning
         )
       )
 
@@ -512,32 +494,16 @@ class PrefetchAppC4:
 
     # Check if the recommended openpilot directory exists
     recommended_exists = os.path.exists(RECOMMENDED_OP_DIR)
-    # Check if the alternate openpilot directory exists
-    alternate_exists = os.path.exists(ALTERNATE_OP_DIR)
-
     # Only create operation for recommended repository if directory doesn't exist
     if not recommended_exists:
       self.clone_operations.append(
         GitCloneProgress(
           ["/usr/bin/git", "clone", "--progress",
-           f"https://github.com/{RECOMMENDED_OP_USER}/openpilot.git",
+           RECOMMENDED_REPO_URL,
            "-b", RECOMMENDED_OP_BRANCH, "--depth=1",
-           "--recurse-submodules", RECOMMENDED_OP_DIR],
-          f"{RECOMMENDED_OP_USER}/{RECOMMENDED_OP_BRANCH}",
+           RECOMMENDED_OP_DIR],
+          f"{RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}",
           RECOMMENDED_OP_DIR  # Target directory to delete before cloning
-        )
-      )
-
-    # Only create operation for alternate repository if directory doesn't exist
-    if not alternate_exists:
-      self.clone_operations.append(
-        GitCloneProgress(
-          ["/usr/bin/git", "clone", "--progress",
-           f"https://github.com/{ALTERNATE_OP_USER}/openpilot.git",
-           "-b", ALTERNATE_OP_BRANCH, "--depth=1",
-           "--recurse-submodules", ALTERNATE_OP_DIR],
-          f"{ALTERNATE_OP_USER}/{ALTERNATE_OP_BRANCH}",
-          ALTERNATE_OP_DIR  # Target directory to delete before cloning
         )
       )
 

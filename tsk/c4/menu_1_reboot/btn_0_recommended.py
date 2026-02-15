@@ -4,15 +4,14 @@ import sys
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialogV2
 from openpilot.system.ui.lib.application import gui_app
 from tsk.c4.ui import ScalableBigButton, Layout, ScrollableBigDialog
-from tsk.common.env import OPENPILOT_DIR, RECOMMENDED_OP_DIR, ALTERNATE_OP_DIR, RECOMMENDED_OP_USER, \
-  RECOMMENDED_OP_BRANCH
+from tsk.common.env import OPENPILOT_DIR, RECOMMENDED_OP_DIR, RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH
 from tsk.common.key_file_manager import KeyFileManager
 
 
 class Recommended(ScalableBigButton):
   def __init__(self):
     super().__init__(
-      f"Install {RECOMMENDED_OP_USER}/ {RECOMMENDED_OP_BRANCH}",
+      f"Install {RECOMMENDED_REPO_LABEL}/ {RECOMMENDED_OP_BRANCH}",
       click_callback=self.click,
       font_size=Layout.reboot_row_button_font_size,
     )
@@ -26,11 +25,11 @@ class Recommended(ScalableBigButton):
     else:
       message = "!!!! Key not installed.\n" \
                 "!!!! Comma can't drive your car.\n\n"
-    message += f"Reboot and install {RECOMMENDED_OP_USER}/{RECOMMENDED_OP_BRANCH}?"
+    message += f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
 
     # Show confirmation dialog with slider
     dialog = BigConfirmationDialogV2(
-      title=f"Slide to install\n{RECOMMENDED_OP_USER}/ {RECOMMENDED_OP_BRANCH}",
+      title=f"Slide to install\n{RECOMMENDED_REPO_LABEL}/ {RECOMMENDED_OP_BRANCH}",
       icon="icons_mici/settings/device/reboot.png",
       red=False,
       confirm_callback=Recommended._do_reboot
@@ -50,11 +49,7 @@ class Recommended(ScalableBigButton):
     shutil.rmtree(OPENPILOT_DIR, ignore_errors=True)
     print(f"Removed {OPENPILOT_DIR}")
 
-    # Remove /data/tsk-alternate since it won't be used
-    shutil.rmtree(ALTERNATE_OP_DIR, ignore_errors=True)
-    print(f"Removed {ALTERNATE_OP_DIR}")
-
-    # Move /data/tsk-alternate to /data/openpilot
+    # Move /data/tsk-recommended to /data/openpilot
     shutil.move(RECOMMENDED_OP_DIR, OPENPILOT_DIR)
     print(f"Moved {RECOMMENDED_OP_DIR} to {OPENPILOT_DIR}")
 
