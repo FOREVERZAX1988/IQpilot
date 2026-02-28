@@ -7,9 +7,13 @@ Pure Widget architecture - NO platform detection needed.
 
 from typing import Optional
 
+import sys
+
 import pyray as rl
 
 from openpilot.system.ui.lib.application import gui_app
+from tsk.c3.ui.button import TSKButton
+from tsk.c3.ui.dialog import YesNoDialog
 from tsk.c3.ui.layout import Theme
 from tsk.common.widget import TSKWidget
 
@@ -30,6 +34,14 @@ class TSKHeader(TSKWidget):
     super().__init__()
     self._current_menu = Theme.menu_tools
     self._nav_result = None
+    self._reboot_button = TSKButton(
+      labels="Reboot",
+      click_callback=self._on_reboot_click,
+      font_size=42,
+      width=220,
+      height=90,
+      background_color=rl.Color(180, 25, 25, 255),
+    )
 
   def _set_nav(self, menu_id: int):
     """Set navigation result when button is clicked."""
@@ -66,6 +78,7 @@ class TSKHeader(TSKWidget):
     title_rect = rl.Rectangle(rect.x, rect.y, rect.width, title_height)
     rl.draw_rectangle_rec(title_rect, Theme.title_bg_color)
     self._draw_title(title_rect)
+    self._draw_reboot_button(title_rect)
 
     return None
 
@@ -91,3 +104,15 @@ class TSKHeader(TSKWidget):
       0,
       title_text_color
     )
+
+  def _draw_reboot_button(self, rect: rl.Rectangle):
+    button_width = 220
+    button_height = rect.height - 20
+    button_rect = rl.Rectangle(rect.x + rect.width - button_width - 20, rect.y + 10, button_width, button_height)
+    self._reboot_button.render(button_rect)
+
+  @staticmethod
+  def _on_reboot_click():
+    should_reboot = YesNoDialog.ask("Reboot without changing anything?")
+    if should_reboot:
+      sys.exit(0)

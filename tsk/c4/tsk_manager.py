@@ -9,8 +9,11 @@ Features:
 Uses custom button with BigButton graphics that scales properly.
 """
 
+import sys
+
 import pyray as rl
 
+from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialogV2
 from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.widgets import Widget
 from tsk.c4.menu_0_tools.btn_0_extractor import Extractor
@@ -26,12 +29,30 @@ class KeyStatusBanner(Widget):
   def __init__(self):
     super().__init__()
     self.set_rect(rl.Rectangle(0, 0, gui_app.width, Layout.banner_height))
+    self._reboot_rect = rl.Rectangle(0, 0, 96, Layout.banner_height - 10)
 
   def _get_status_text(self) -> str:
     return "IQ.Pilot Installer"
 
   def _handle_mouse_release(self, mouse_pos):
+    if rl.check_collision_point_rec(mouse_pos, self._reboot_rect):
+      self._show_reboot_confirm()
+      return True
     return False
+
+  @staticmethod
+  def _show_reboot_confirm():
+    dialog = BigConfirmationDialogV2(
+      title="Slide to reboot",
+      icon="icons_mici/settings/device/reboot.png",
+      red=True,
+      confirm_callback=KeyStatusBanner._do_reboot,
+    )
+    gui_app.set_modal_overlay(dialog)
+
+  @staticmethod
+  def _do_reboot():
+    sys.exit(0)
 
   def _render(self, rect: rl.Rectangle):
     """Render the key status banner."""
@@ -49,6 +70,15 @@ class KeyStatusBanner(Widget):
     text_y = rect.y + (rect.height - text_size.y) / 2
 
     rl.draw_text_ex(font, status_text, rl.Vector2(text_x, text_y), font_size, 0, rl.Color(240, 240, 240, 255))
+
+    # Top-right reboot button.
+    self._reboot_rect = rl.Rectangle(rect.x + rect.width - 104, rect.y + 5, 96, rect.height - 10)
+    rl.draw_rectangle_rounded(self._reboot_rect, 0.2, 10, rl.Color(180, 25, 25, 255))
+    reboot_text = "Reboot"
+    reboot_size = rl.measure_text_ex(font, reboot_text, 23, 0)
+    reboot_x = self._reboot_rect.x + (self._reboot_rect.width - reboot_size.x) / 2
+    reboot_y = self._reboot_rect.y + (self._reboot_rect.height - reboot_size.y) / 2
+    rl.draw_text_ex(font, reboot_text, rl.Vector2(reboot_x, reboot_y), 23, 0, rl.WHITE)
 
     # Draw a subtle bottom border
     rl.draw_line(int(rect.x), int(rect.y + rect.height - 1),
