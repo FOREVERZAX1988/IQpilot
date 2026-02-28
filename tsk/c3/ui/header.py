@@ -10,7 +10,6 @@ from typing import Optional
 import pyray as rl
 
 from openpilot.system.ui.lib.application import gui_app
-from tsk.c3.ui.button import TSKButton
 from tsk.c3.ui.layout import Theme
 from tsk.common.key_file_manager import KeyFileManager
 from tsk.common.widget import TSKWidget
@@ -33,27 +32,6 @@ class TSKHeader(TSKWidget):
     self.key_manager = KeyFileManager()
     self._current_menu = Theme.menu_tools
     self._nav_result = None
-
-    # Create navigation buttons (TSKButton handles events automatically)
-    self._nav_left = TSKButton(
-      labels=[
-        {"text": "< Tools", "x_offset": 10, "y_offset": 20},
-        {"text": "< Menu", "x_offset": 10, "y_offset": 90},
-      ],
-      click_callback=lambda: self._set_nav(Theme.menu_tools),
-      font_size=Theme.nav_button_font_size,
-      multi_line=True
-    )
-
-    self._nav_right = TSKButton(
-      labels=[
-        {"text": "Reboot >", "x_offset": 10, "y_offset": 20},
-        {"text": "Menu >", "x_offset": 55, "y_offset": 90},
-      ],
-      click_callback=lambda: self._set_nav(Theme.menu_reboot),
-      font_size=Theme.nav_button_font_size,
-      multi_line=True
-    )
 
   def _set_nav(self, menu_id: int):
     """Set navigation result when button is clicked."""
@@ -105,54 +83,26 @@ class TSKHeader(TSKWidget):
     rl.draw_rectangle_rec(key_status_rect, Theme.key_bg_color)
     self._draw_key_status(key_status_rect)
 
-    # Draw navigation buttons
-    self._nav_result = None
-    self._draw_navigation_buttons(rect, title_height, key_status_height)
-
-    return self._nav_result
+    return None
 
   def _draw_title(self, rect: rl.Rectangle):
     """Draw the title text."""
     # Use white text for header title
     title_text_color = Theme.brighten_color(Theme.title_bg_color, Theme.brighten_amount)
-    menu_name = Theme.menu_names.get(self._current_menu, "Unknown Menu")
-    prefix = "TSK Manager: "
-
-    # Measure and position text
-    prefix_size = rl.measure_text_ex(
+    title = "IQ.Pilot Installer"
+    title_size = rl.measure_text_ex(
       gui_app.font(),
-      prefix,
+      title,
       Theme.title_font_size,
       0
     )
+    title_x = rect.x + (rect.width - title_size.x) / 2
+    title_y = rect.y + (rect.height - title_size.y) / 2
 
-    prefix_x = rect.width * Theme.title_prefix_x_offset_percent + Theme.title_x_offset
-    menu_name_x = prefix_x + prefix_size.x + 120
-
-    full_text = f"{prefix}{menu_name}"
-    full_size = rl.measure_text_ex(
-      gui_app.font(),
-      full_text,
-      Theme.title_font_size,
-      0
-    )
-    text_y = rect.y + (rect.height - full_size.y) / 2
-
-    # Draw prefix
     rl.draw_text_ex(
       gui_app.font(),
-      prefix,
-      rl.Vector2(prefix_x, text_y),
-      Theme.title_font_size,
-      0,
-      title_text_color
-    )
-
-    # Draw menu name
-    rl.draw_text_ex(
-      gui_app.font(),
-      menu_name,
-      rl.Vector2(menu_name_x, text_y),
+      title,
+      rl.Vector2(title_x, title_y),
       Theme.title_font_size,
       0,
       title_text_color
@@ -184,43 +134,3 @@ class TSKHeader(TSKWidget):
       0,
       Theme.key_text_color
     )
-
-  def _draw_navigation_buttons(
-          self,
-          rect: rl.Rectangle,
-          title_height: float,
-          key_status_height: float
-  ):
-    """Draw navigation buttons overlapping the header."""
-    # Calculate button dimensions
-    button_height = title_height + key_status_height
-
-    # Calculate button width based on text
-    left_text_size = rl.measure_text_ex(
-      gui_app.font(),
-      Theme.nav_button_text_left.replace('\\n', ' '),
-      Theme.nav_button_font_size,
-      0
-    )
-    right_text_size = rl.measure_text_ex(
-      gui_app.font(),
-      Theme.nav_button_text_right.replace('\\n', ' '),
-      Theme.nav_button_font_size,
-      0
-    )
-    button_width = max(left_text_size.x, right_text_size.x) + 70
-
-    # Show appropriate button based on current menu
-    if self._current_menu == Theme.menu_reboot:
-      # Show left button (back to tools)
-      left_rect = rl.Rectangle(rect.x, rect.y, button_width, button_height)
-      self._nav_left.render(left_rect)
-    elif self._current_menu == Theme.menu_tools:
-      # Show right button (go to reboot)
-      right_rect = rl.Rectangle(
-        rect.x + rect.width - button_width,
-        rect.y,
-        button_width,
-        button_height
-      )
-      self._nav_right.render(right_rect)

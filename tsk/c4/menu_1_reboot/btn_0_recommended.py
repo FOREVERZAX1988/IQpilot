@@ -11,9 +11,10 @@ from tsk.common.key_file_manager import KeyFileManager
 class Recommended(ScalableBigButton):
   def __init__(self):
     super().__init__(
-      f"Install {RECOMMENDED_REPO_LABEL}/ {RECOMMENDED_OP_BRANCH}",
+      "Install IQ.Pilot",
       click_callback=self.click,
-      font_size=Layout.reboot_row_button_font_size,
+      font_size=50,
+      text_offset=(20, 20),
     )
 
   @staticmethod
@@ -29,7 +30,7 @@ class Recommended(ScalableBigButton):
 
     # Show confirmation dialog with slider
     dialog = BigConfirmationDialogV2(
-      title=f"Slide to install\n{RECOMMENDED_REPO_LABEL}/ {RECOMMENDED_OP_BRANCH}",
+      title="Slide to install\nIQ.Pilot",
       icon="icons_mici/settings/device/reboot.png",
       red=False,
       confirm_callback=Recommended._do_reboot

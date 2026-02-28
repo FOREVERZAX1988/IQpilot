@@ -3,11 +3,12 @@ import traceback
 
 from tsk.c3.tools_menu.extractor import NotAGNOSError, BoarddNotRunningError, RetryError, TSKExtractor
 from tsk.c3.ui.dialog import OkayDialog
+from tsk.common.key_file_manager import KeyFileManager
 
 
 def tsk_extractor_action():
-  """Action to perform when the TSK Extractor button is pressed."""
-  print("TSK Extractor button pressed")
+  """Action to perform when the Toyota TSS2 key extraction button is pressed."""
+  print("Toyota TSS2 key extraction button pressed")
 
   try:
     secoc_key = TSKExtractor.hack()

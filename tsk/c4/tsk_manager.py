@@ -13,7 +13,6 @@ import pyray as rl
 
 from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.widgets import Widget
-from openpilot.system.ui.widgets.scroller import Scroller
 from tsk.c4.menu_0_tools.btn_0_extractor import Extractor
 from tsk.c4.menu_1_reboot.btn_0_recommended import Recommended
 from tsk.c4.ui import Layout, ScrollableBigDialog
@@ -51,7 +50,7 @@ class KeyStatusBanner(Widget):
   def _show_no_key_dialog(self):
     """Show dialog when no key is installed."""
     dialog = ScrollableBigDialog(
-      description="Run TSK Extractor to get your key"
+      description="Tap 'I have a Toyota with TSS2' to extract your key."
     )
     gui_app.set_modal_overlay(dialog)
 
@@ -107,7 +106,8 @@ class TSKManager(TSKWidget):
 
   Layout:
   - Fixed top banner: Key status (clickable)
-  - Vertical scroller with two horizontal scrollers (one for each row)
+  - Centered Install button
+  - Bottom-left Toyota key extraction button
   """
 
   def __init__(self):
@@ -116,62 +116,41 @@ class TSKManager(TSKWidget):
     # Initialize key manager
     self.key_manager = KeyFileManager()
 
-    # Create top banner (fixed, not scrollable)
+    # Fixed top banner.
     self.key_banner = KeyStatusBanner(self.key_manager)
-
-    # Create two horizontal scrollers
-    self.tools_scroller = Scroller(
-      [
-        Extractor(),
-      ],
-      horizontal=True,
-      snap_items=False,
-      spacing=Layout.scroller_spacing,
-      pad_start=Layout.scroller_padding,
-      pad_end=Layout.scroller_padding
-    )
-    self.tools_scroller.set_rect(rl.Rectangle(0, 0, gui_app.width, Layout.button_height))
-
-    self.reboot_scroller = Scroller(
-      [
-        Recommended(),
-      ],
-      horizontal=True,
-      snap_items=False,
-      spacing=Layout.scroller_spacing,
-      pad_start=Layout.scroller_padding,
-      pad_end=Layout.scroller_padding
-    )
-    self.reboot_scroller.set_rect(rl.Rectangle(0, 0, gui_app.width, Layout.button_height))
-
-    # Create vertical scroller with the two horizontal scrollers
-    self.vertical_scroller = Scroller(
-      [self.tools_scroller, self.reboot_scroller],
-      horizontal=False,
-      snap_items=True,
-      spacing=Layout.scroller_spacing,
-      pad_start=Layout.scroller_padding,
-      pad_end=Layout.scroller_padding
-    )
+    self.install_button = Recommended()
+    self.toyota_button = Extractor()
 
   def _render(self, rect: rl.Rectangle):
     """Render the C4 GUI."""
-
-    # Enable scissor mode for the scroller area to clip overflow
-    scroller_rect = rl.Rectangle(
+    content_rect = rl.Rectangle(
       rect.x,
       rect.y + Layout.banner_height,
       rect.width,
       rect.height - Layout.banner_height
     )
 
-    rl.begin_scissor_mode(int(scroller_rect.x), int(scroller_rect.y),
-                          int(scroller_rect.width), int(scroller_rect.height))
+    # Center installation CTA on the home screen.
+    install_width = min(360, content_rect.width - 24)
+    install_height = min(120, content_rect.height - 56)
+    install_rect = rl.Rectangle(
+      content_rect.x + (content_rect.width - install_width) / 2,
+      content_rect.y + (content_rect.height - install_height) / 2 - 8,
+      install_width,
+      install_height,
+    )
+    self.install_button.render(install_rect)
 
-    # Render the vertical scroller
-    self.vertical_scroller.render(scroller_rect)
-
-    rl.end_scissor_mode()
+    # Keep Toyota extraction as a secondary action in the bottom-left corner.
+    toyota_width = min(260, content_rect.width - 24)
+    toyota_height = 58
+    toyota_rect = rl.Rectangle(
+      content_rect.x + 10,
+      content_rect.y + content_rect.height - toyota_height - 8,
+      toyota_width,
+      toyota_height,
+    )
+    self.toyota_button.render(toyota_rect)
 
     # Render the banner AFTER the scroller so it draws on top
     banner_rect = rl.Rectangle(rect.x, rect.y, rect.width, Layout.banner_height)
