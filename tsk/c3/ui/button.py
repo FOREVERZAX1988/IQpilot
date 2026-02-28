@@ -129,6 +129,30 @@ class TSKButton(TSKWidget):
     else:
       rl.draw_rectangle_rounded(rect, 0.1, 10, self._background_color)
 
+    # Single-line string labels get strict visual centering with fit-to-box sizing.
+    if isinstance(self._labels_spec, str) and not self._multi_line:
+      font_size = self._font_size
+      text = self._labels_spec
+      text_size = rl.measure_text_ex(gui_app.font(), text, font_size, 1.0)
+      max_width = rect.width - 20
+      max_height = rect.height - 12
+
+      while (text_size.x > max_width or text_size.y > max_height) and font_size > 16:
+        font_size -= 1
+        text_size = rl.measure_text_ex(gui_app.font(), text, font_size, 1.0)
+
+      text_x = rect.x + (rect.width - text_size.x) / 2
+      text_y = rect.y + (rect.height - text_size.y) / 2
+      rl.draw_text_ex(
+        gui_app.font(),
+        text,
+        rl.Vector2(text_x, text_y),
+        font_size,
+        1.0,
+        self._text_color
+      )
+      return None
+
     # Calculate labels based on actual rect size
     labels = self._calculate_labels(rect.width, rect.height)
 

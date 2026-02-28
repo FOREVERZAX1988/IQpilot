@@ -42,9 +42,9 @@ class TSKManager(TSKWidget):
     self.toyota_button = TSKButton(
       labels="I have a Toyota with TSS2",
       click_callback=tsk_extractor_action,
-      font_size=58,
-      width=900,
-      height=180,
+      font_size=48,
+      width=450,
+      height=90,
     )
 
   def _render(self, rect: rl.Rectangle):
@@ -75,8 +75,8 @@ class TSKManager(TSKWidget):
     self.install_button.render(install_rect)
 
     # Toyota extraction button in the bottom-left corner.
-    toyota_width = min(900, content_rect.width - 120)
-    toyota_height = 180
+    toyota_width = min(450, content_rect.width - 120)
+    toyota_height = 90
     toyota_rect = rl.Rectangle(
       content_rect.x + 50,
       content_rect.y + content_rect.height - toyota_height - 35,
