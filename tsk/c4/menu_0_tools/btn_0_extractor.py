@@ -11,7 +11,7 @@ class Extractor(ScalableBigButton):
     super().__init__(
       "I have a Toyota with TSS2",
       click_callback=self.click,
-      font_size=28,
+      font_size=22,
       center_text=True,
     )
 

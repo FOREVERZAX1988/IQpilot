@@ -127,8 +127,8 @@ class TSKManager(TSKWidget):
     self.install_button.render(install_rect)
 
     # Keep Toyota extraction as a secondary action in the bottom-left corner.
-    toyota_width = min(360, content_rect.width - 24)
-    toyota_height = 64
+    toyota_width = min(280, content_rect.width - 24)
+    toyota_height = 50
     toyota_rect = rl.Rectangle(
       content_rect.x + 10,
       content_rect.y + content_rect.height - toyota_height - 8,
