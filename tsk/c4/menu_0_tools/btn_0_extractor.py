@@ -9,7 +9,7 @@ from tsk.common.key_file_manager import KeyFileManager
 class Extractor(ScalableBigButton):
   def __init__(self):
     super().__init__(
-      "I have a Toyota with TSS2",
+      "I have a TSK Toyota",
       click_callback=self.click,
       font_size=22,
       center_text=True,
