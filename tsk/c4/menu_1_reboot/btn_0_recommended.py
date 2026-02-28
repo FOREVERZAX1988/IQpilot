@@ -7,7 +7,6 @@ from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialogV2
 from openpilot.system.ui.lib.application import gui_app
 from tsk.c4.ui import ScalableBigButton, Layout, ScrollableBigDialog
 from tsk.common.env import OPENPILOT_DIR, RECOMMENDED_OP_DIR, RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH
-from tsk.common.key_file_manager import KeyFileManager
 
 
 class Recommended(ScalableBigButton):
@@ -22,14 +21,7 @@ class Recommended(ScalableBigButton):
 
   @staticmethod
   def click():
-    # Build confirmation message
-    key = KeyFileManager().installed_key
-    if key:
-      message = f"Key installed: {key}\n\n"
-    else:
-      message = "!!!! Key not installed.\n" \
-                "!!!! Comma can't drive your car.\n\n"
-    message += f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
+    message = f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
 
     # Show confirmation dialog with slider
     dialog = BigConfirmationDialogV2(

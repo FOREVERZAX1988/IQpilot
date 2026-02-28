@@ -20,13 +20,7 @@ class Rebooter:
 
   def recommended_action(self):
     print("Recommended button pressed")
-    key = KeyFileManager().installed_key
-    if key:
-      question = f"Key installed: {key}\n\n"
-    else:
-      question = "!!!! Key not installed.\n" \
-                 "!!!! Comma can't drive your car.\n\n"
-    question += f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
+    question = f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
     should_reboot = YesNoDialog.ask(question)
     if not should_reboot:
       print("Action cancelled")
