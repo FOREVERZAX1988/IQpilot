@@ -36,6 +36,7 @@ class TSKButton(TSKWidget):
           height: int = 200,
           multi_line: bool = False,
           background_color: Optional[rl.Color] = None,  # ADDED: Custom background color
+          background_gradient: Optional[tuple[rl.Color, rl.Color]] = None,
   ):
     """
     Initialize TSKButton.
@@ -49,6 +50,7 @@ class TSKButton(TSKWidget):
         height: Button height (used for layout calculations)
         multi_line: If True and labels is a string, split on \\n for multi-line
         background_color: Custom background color (defaults to gray if not provided)
+        background_gradient: Optional left-to-right gradient (overrides background_color)
     """
     super().__init__()
 
@@ -58,6 +60,7 @@ class TSKButton(TSKWidget):
     self._font_size = font_size
     self._init_width = width
     self._init_height = height
+    self._background_gradient = background_gradient
 
     # Use custom background color if provided, otherwise default gray
     if background_color is not None:
@@ -118,8 +121,13 @@ class TSKButton(TSKWidget):
 
     We just need to draw the button appearance.
     """
-    # Draw button background with rounded corners
-    rl.draw_rectangle_rounded(rect, 0.1, 10, self._background_color)
+    # Draw button background.
+    if self._background_gradient is not None:
+      left_color, right_color = self._background_gradient
+      rl.draw_rectangle_gradient_h(int(rect.x), int(rect.y), int(rect.width), int(rect.height), left_color, right_color)
+      rl.draw_rectangle_rounded_lines_ex(rect, 0.1, 10, 2, rl.Color(255, 255, 255, 90))
+    else:
+      rl.draw_rectangle_rounded(rect, 0.1, 10, self._background_color)
 
     # Calculate labels based on actual rect size
     labels = self._calculate_labels(rect.width, rect.height)

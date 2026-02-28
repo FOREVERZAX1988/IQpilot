@@ -3,8 +3,8 @@
 TSK Manager main application for C4 (mici) device.
 
 Features:
-- Fixed top banner showing key installation status (clickable)
-- Vertical scroller with two horizontal scrollers (one for each row of buttons)
+- Fixed top banner with installer title
+- Simple home layout with install and Toyota key actions
 
 Uses custom button with BigButton graphics that scales properly.
 """
@@ -15,62 +15,23 @@ from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.widgets import Widget
 from tsk.c4.menu_0_tools.btn_0_extractor import Extractor
 from tsk.c4.menu_1_reboot.btn_0_recommended import Recommended
-from tsk.c4.ui import Layout, ScrollableBigDialog
-from tsk.common.key_file_manager import KeyFileManager
+from tsk.c4.ui import Layout
 from tsk.common.widget import TSKWidget
 
 
 class KeyStatusBanner(Widget):
   """
-  Top banner showing key installation status.
-  Acts as a button - click to see details.
+  Top banner with installer title.
   """
-  def __init__(self, key_manager: KeyFileManager):
+  def __init__(self):
     super().__init__()
-    self._key_manager = key_manager
     self.set_rect(rl.Rectangle(0, 0, gui_app.width, Layout.banner_height))
 
   def _get_status_text(self) -> str:
-    """Get the current key status text."""
-    if self._key_manager.installed_key:
-      return "Key installed"
-    else:
-      return "Key not installed"
+    return "IQ.Pilot Installer"
 
   def _handle_mouse_release(self, mouse_pos):
-    """Handle click on the banner."""
-    if self._key_manager.installed_key:
-      # Show the installed key
-      self._show_installed_key_dialog()
-    else:
-      # Show instruction to run TSK Extractor
-      self._show_no_key_dialog()
-    return True
-
-  def _show_no_key_dialog(self):
-    """Show dialog when no key is installed."""
-    dialog = ScrollableBigDialog(
-      description="Tap 'I have a Toyota with TSS2' to extract your key."
-    )
-    gui_app.set_modal_overlay(dialog)
-
-  def _show_installed_key_dialog(self):
-    """Show dialog displaying the installed key."""
-    exploded_key = (
-      self._key_manager.installed_key[0:4] + ' ' +
-      self._key_manager.installed_key[4:8] + ' ' +
-      self._key_manager.installed_key[8:12] + ' ' +
-      self._key_manager.installed_key[12:16] + '\n' +
-      self._key_manager.installed_key[16:20] + ' ' +
-      self._key_manager.installed_key[20:24] + ' ' +
-      self._key_manager.installed_key[24:28] + ' ' +
-      self._key_manager.installed_key[28:32]
-    )
-    dialog = ScrollableBigDialog(
-      title='Installed Key',
-      description=exploded_key
-    )
-    gui_app.set_modal_overlay(dialog)
+    return False
 
   def _render(self, rect: rl.Rectangle):
     """Render the key status banner."""
@@ -87,10 +48,7 @@ class KeyStatusBanner(Widget):
     text_x = rect.x + (rect.width - text_size.x) / 2
     text_y = rect.y + (rect.height - text_size.y) / 2
 
-    # Color: green if key installed, yellow if not
-    text_color = rl.Color(100, 255, 100, 255) if self._key_manager.installed_key else rl.Color(255, 200, 0, 255)
-
-    rl.draw_text_ex(font, status_text, rl.Vector2(text_x, text_y), font_size, 0, text_color)
+    rl.draw_text_ex(font, status_text, rl.Vector2(text_x, text_y), font_size, 0, rl.Color(240, 240, 240, 255))
 
     # Draw a subtle bottom border
     rl.draw_line(int(rect.x), int(rect.y + rect.height - 1),
@@ -105,7 +63,7 @@ class TSKManager(TSKWidget):
   TSK Manager for C4 (mici) device.
 
   Layout:
-  - Fixed top banner: Key status (clickable)
+  - Fixed top banner
   - Centered Install button
   - Bottom-left Toyota key extraction button
   """
@@ -113,11 +71,8 @@ class TSKManager(TSKWidget):
   def __init__(self):
     super().__init__()
 
-    # Initialize key manager
-    self.key_manager = KeyFileManager()
-
     # Fixed top banner.
-    self.key_banner = KeyStatusBanner(self.key_manager)
+    self.key_banner = KeyStatusBanner()
     self.install_button = Recommended()
     self.toyota_button = Extractor()
 
@@ -142,8 +97,8 @@ class TSKManager(TSKWidget):
     self.install_button.render(install_rect)
 
     # Keep Toyota extraction as a secondary action in the bottom-left corner.
-    toyota_width = min(260, content_rect.width - 24)
-    toyota_height = 58
+    toyota_width = min(360, content_rect.width - 24)
+    toyota_height = 64
     toyota_rect = rl.Rectangle(
       content_rect.x + 10,
       content_rect.y + content_rect.height - toyota_height - 8,

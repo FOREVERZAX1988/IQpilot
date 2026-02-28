@@ -40,11 +40,15 @@ class ScalableBigButton(Widget):
                text_offset: tuple[int, int] = (15, 30),
                button_width = Layout.button_width,
                button_height = Layout.button_height,
+               center_text: bool = False,
+               gradient_colors: tuple[rl.Color, rl.Color] | None = None,
                ):
     super().__init__()
     self._text = text
     self._font_size = font_size
     self._text_offset = text_offset  # (x, y) offset from top-left of button
+    self._center_text = center_text
+    self._gradient_colors = gradient_colors
     self.set_click_callback(click_callback)
 
     # Load BigButton textures
@@ -68,9 +72,6 @@ class ScalableBigButton(Widget):
 
   def _render(self, rect: rl.Rectangle):
     """Render the button with scaled BigButton graphics."""
-    # Choose texture based on press state
-    txt_bg = self._txt_hover_bg if self.is_pressed else self._txt_default_bg
-
     # Scale animation
     scale = self._scale_filter.update(1.07 if self.is_pressed else 1.0)
 
@@ -80,17 +81,42 @@ class ScalableBigButton(Widget):
     btn_x = rect.x + (rect.width - scaled_width) / 2
     btn_y = rect.y + (rect.height - scaled_height) / 2
 
-    # Draw background texture scaled to button size
-    source_rect = rl.Rectangle(0, 0, self._txt_default_bg.width, self._txt_default_bg.height)
-    dest_rect = rl.Rectangle(btn_x, btn_y, scaled_width, scaled_height)
-    rl.draw_texture_pro(txt_bg, source_rect, dest_rect, rl.Vector2(0, 0), 0, rl.WHITE)
+    # Draw background: gradient for highlighted CTAs, otherwise default BigButton textures.
+    if self._gradient_colors is not None:
+      left_color, right_color = self._gradient_colors
+      rl.draw_rectangle_gradient_h(int(btn_x), int(btn_y), int(scaled_width), int(scaled_height), left_color, right_color)
+      rl.draw_rectangle_rounded_lines_ex(
+        rl.Rectangle(btn_x, btn_y, scaled_width, scaled_height),
+        0.08,
+        10,
+        2,
+        rl.Color(255, 255, 255, 90),
+      )
+    else:
+      txt_bg = self._txt_hover_bg if self.is_pressed else self._txt_default_bg
+      source_rect = rl.Rectangle(0, 0, self._txt_default_bg.width, self._txt_default_bg.height)
+      dest_rect = rl.Rectangle(btn_x, btn_y, scaled_width, scaled_height)
+      rl.draw_texture_pro(txt_bg, source_rect, dest_rect, rl.Vector2(0, 0), 0, rl.WHITE)
 
-    # Draw text at specified offset from button top-left
-    text_x = rect.x + self._text_offset[0]
-    text_y = rect.y + self._text_offset[1]
-    self._label.set_position(text_x, text_y)
-    self._label.set_width(int(rect.width - self._text_offset[0] * 2))
-    self._label.render()
+    if self._center_text:
+      # Center text and shrink slightly if needed to keep it inside the button.
+      font = gui_app.font(FontWeight.DISPLAY)
+      draw_font_size = self._font_size
+      text_size = rl.measure_text_ex(font, self._text, draw_font_size, 0)
+      while text_size.x > rect.width - 20 and draw_font_size > 16:
+        draw_font_size -= 1
+        text_size = rl.measure_text_ex(font, self._text, draw_font_size, 0)
+
+      text_x = rect.x + (rect.width - text_size.x) / 2
+      text_y = rect.y + (rect.height - text_size.y) / 2
+      rl.draw_text_ex(font, self._text, rl.Vector2(text_x, text_y), draw_font_size, 0, rl.WHITE)
+    else:
+      # Original offset-based text placement.
+      text_x = rect.x + self._text_offset[0]
+      text_y = rect.y + self._text_offset[1]
+      self._label.set_position(text_x, text_y)
+      self._label.set_width(int(rect.width - self._text_offset[0] * 2))
+      self._label.render()
 
     return True
 

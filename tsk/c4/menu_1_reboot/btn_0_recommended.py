@@ -1,6 +1,8 @@
 import shutil
 import sys
 
+import pyray as rl
+
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialogV2
 from openpilot.system.ui.lib.application import gui_app
 from tsk.c4.ui import ScalableBigButton, Layout, ScrollableBigDialog
@@ -13,8 +15,9 @@ class Recommended(ScalableBigButton):
     super().__init__(
       "Install IQ.Pilot",
       click_callback=self.click,
-      font_size=50,
-      text_offset=(20, 20),
+      font_size=52,
+      center_text=True,
+      gradient_colors=(rl.Color(255, 0, 231, 255), rl.Color(10, 0, 255, 255)),
     )
 
   @staticmethod

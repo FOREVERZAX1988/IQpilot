@@ -12,7 +12,7 @@ class Extractor(ScalableBigButton):
       "I have a Toyota with TSS2",
       click_callback=self.click,
       font_size=28,
-      text_offset=(12, 12),
+      center_text=True,
     )
 
   @staticmethod

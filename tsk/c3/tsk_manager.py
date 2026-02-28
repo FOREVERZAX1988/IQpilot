@@ -36,6 +36,7 @@ class TSKManager(TSKWidget):
       font_size=110,
       width=1100,
       height=380,
+      background_gradient=(rl.Color(255, 0, 231, 255), rl.Color(10, 0, 255, 255)),
     )
 
     self.toyota_button = TSKButton(
@@ -50,7 +51,7 @@ class TSKManager(TSKWidget):
     """Render the TSK Manager home UI."""
     rl.clear_background(rl.BLACK)
 
-    # Header with title and key status.
+    # Header title.
     header_height = self.header.get_height()
     header_rect = rl.Rectangle(rect.x, rect.y, rect.width, header_height)
     self.header.render(header_rect)
