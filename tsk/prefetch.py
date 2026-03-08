@@ -30,7 +30,9 @@ import pyray as rl
 
 # Local imports
 from openpilot.system.ui.lib.application import gui_app
+from tsk.common.custom_install import read_custom_branch_request
 from tsk.common.env import (
+  CUSTOM_OP_DIR,
   RECOMMENDED_REPO_URL,
   RECOMMENDED_REPO_LABEL,
   RECOMMENDED_OP_BRANCH,
@@ -289,6 +291,19 @@ class PrefetchAppC3:
         )
       )
 
+    custom_branch = read_custom_branch_request()
+    if custom_branch is not None:
+      self.clone_operations.append(
+        GitCloneProgress(
+          ["/usr/bin/git", "clone", "--progress",
+           RECOMMENDED_REPO_URL,
+           "-b", custom_branch, "--depth=1",
+           CUSTOM_OP_DIR],
+          f"{RECOMMENDED_REPO_LABEL}/{custom_branch}",
+          CUSTOM_OP_DIR
+        )
+      )
+
   def run(self):
     """
     Run the prefetch application with retry mechanism.
@@ -504,6 +519,19 @@ class PrefetchAppC4:
            RECOMMENDED_OP_DIR],
           f"{RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}",
           RECOMMENDED_OP_DIR  # Target directory to delete before cloning
+        )
+      )
+
+    custom_branch = read_custom_branch_request()
+    if custom_branch is not None:
+      self.clone_operations.append(
+        GitCloneProgress(
+          ["/usr/bin/git", "clone", "--progress",
+           RECOMMENDED_REPO_URL,
+           "-b", custom_branch, "--depth=1",
+           CUSTOM_OP_DIR],
+          f"{RECOMMENDED_REPO_LABEL}/{custom_branch}",
+          CUSTOM_OP_DIR
         )
       )
 

@@ -18,6 +18,7 @@ from openpilot.system.ui.lib.application import gui_app, FontWeight
 from openpilot.system.ui.widgets import Widget
 from tsk.c4.menu_0_tools.btn_0_extractor import Extractor
 from tsk.c4.menu_1_reboot.btn_0_recommended import Recommended
+from tsk.c4.menu_1_reboot.btn_2_custom_branch import CustomBranch
 from tsk.c4.ui import Layout
 from tsk.common.widget import TSKWidget
 
@@ -104,6 +105,7 @@ class TSKManager(TSKWidget):
     # Fixed top banner.
     self.key_banner = KeyStatusBanner()
     self.install_button = Recommended()
+    self.custom_branch_button = CustomBranch()
     self.toyota_button = Extractor()
 
   def _render(self, rect: rl.Rectangle):
@@ -126,7 +128,7 @@ class TSKManager(TSKWidget):
     )
     self.install_button.render(install_rect)
 
-    # Keep Toyota extraction as a secondary action in the bottom-left corner.
+    # Secondary actions live along the bottom edge.
     toyota_width = min(316, content_rect.width - 24)
     toyota_height = 57
     toyota_rect = rl.Rectangle(
@@ -136,6 +138,16 @@ class TSKManager(TSKWidget):
       toyota_height,
     )
     self.toyota_button.render(toyota_rect)
+
+    custom_width = min(240, content_rect.width - 24)
+    custom_height = 50
+    custom_rect = rl.Rectangle(
+      content_rect.x + content_rect.width - custom_width - 10,
+      content_rect.y + content_rect.height - custom_height - 8,
+      custom_width,
+      custom_height,
+    )
+    self.custom_branch_button.render(custom_rect)
 
     # Render the banner AFTER the scroller so it draws on top
     banner_rect = rl.Rectangle(rect.x, rect.y, rect.width, Layout.banner_height)

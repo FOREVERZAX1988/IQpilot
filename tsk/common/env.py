@@ -21,6 +21,8 @@ RECOMMENDED_REPO_URL = os.getenv("TSK_RECOMMENDED_REPO_URL", "https://gitlvb.tea
 RECOMMENDED_REPO_LABEL = os.getenv("TSK_RECOMMENDED_REPO_LABEL", "IQ.Lvbs/IQ.Pilot")
 RECOMMENDED_OP_BRANCH = os.getenv("TSK_RECOMMENDED_BRANCH", "release")
 RECOMMENDED_OP_DIR = f"{COMMA_DATA_DIR}/tsk-recommended"
+CUSTOM_BRANCH_FILE = f"{COMMA_DATA_DIR}/tsk-custom-branch"
+CUSTOM_OP_DIR = f"{COMMA_DATA_DIR}/tsk-custom"
 
 
 def is_calvins_comma() -> bool:

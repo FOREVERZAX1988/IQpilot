@@ -87,6 +87,17 @@ function launch {
   # Run TSKM
   cd /data/openpilot
   python3 tsk/prefetch.py
+
+  # Custom branch requests are prefetched into /data/tsk-custom, then swapped in
+  # on the next boot so the install path stays identical to the tested release flow.
+  if [ -f /data/tsk-custom-branch ] && [ -d /data/tsk-custom/.git ] && git -C /data/tsk-custom rev-parse HEAD >/dev/null 2>&1; then
+    sudo rm -rf /data/openpilot
+    mv /data/tsk-custom /data/openpilot
+    rm -f /data/tsk-custom-branch
+    sudo reboot
+    exit
+  fi
+
   python3 tsk/main.py
   #bash  # Debug
 

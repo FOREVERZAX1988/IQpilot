@@ -99,17 +99,28 @@ class ScalableBigButton(Widget):
       rl.draw_texture_pro(txt_bg, source_rect, dest_rect, rl.Vector2(0, 0), 0, rl.WHITE)
 
     if self._center_text:
-      # Center text and shrink slightly if needed to keep it inside the button.
       font = gui_app.font(FontWeight.DISPLAY)
       draw_font_size = self._font_size
-      text_size = rl.measure_text_ex(font, self._text, draw_font_size, 0)
-      while text_size.x > rect.width - 20 and draw_font_size > 16:
-        draw_font_size -= 1
-        text_size = rl.measure_text_ex(font, self._text, draw_font_size, 0)
+      lines = self._text.split("\n")
 
-      text_x = rect.x + (rect.width - text_size.x) / 2
-      text_y = rect.y + (rect.height - text_size.y) / 2
-      rl.draw_text_ex(font, self._text, rl.Vector2(text_x, text_y), draw_font_size, 0, rl.WHITE)
+      def measure_lines(size: int) -> tuple[float, float]:
+        widths = [rl.measure_text_ex(font, line, size, 0).x for line in lines]
+        line_height = rl.measure_text_ex(font, "Ay", size, 0).y
+        total_height = line_height * len(lines)
+        return max(widths, default=0), total_height
+
+      max_width, total_height = measure_lines(draw_font_size)
+      while (max_width > rect.width - 20 or total_height > rect.height - 12) and draw_font_size > 16:
+        draw_font_size -= 1
+        max_width, total_height = measure_lines(draw_font_size)
+
+      line_height = rl.measure_text_ex(font, "Ay", draw_font_size, 0).y
+      text_y = rect.y + (rect.height - total_height) / 2
+      for line in lines:
+        line_size = rl.measure_text_ex(font, line, draw_font_size, 0)
+        text_x = rect.x + (rect.width - line_size.x) / 2
+        rl.draw_text_ex(font, line, rl.Vector2(text_x, text_y), draw_font_size, 0, rl.WHITE)
+        text_y += line_height
     else:
       # Original offset-based text placement.
       text_x = rect.x + self._text_offset[0]
