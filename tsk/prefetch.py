@@ -35,8 +35,9 @@ from tsk.common.env import (
   CUSTOM_OP_DIR,
   RECOMMENDED_REPO_URL,
   RECOMMENDED_REPO_LABEL,
-  RECOMMENDED_OP_BRANCH,
   RECOMMENDED_OP_DIR,
+  get_recommended_install_ref,
+  get_recommended_op_branch,
 )
 
 # -------------------------------------------------------------------------
@@ -275,6 +276,8 @@ class PrefetchAppC3:
     three possibilities gracefully: none, one, or both directories may exist.
     """
     self.clone_operations = []
+    recommended_branch = get_recommended_op_branch()
+    recommended_ref = get_recommended_install_ref()
 
     # Check if the recommended openpilot directory exists
     recommended_exists = os.path.exists(RECOMMENDED_OP_DIR)
@@ -284,9 +287,9 @@ class PrefetchAppC3:
         GitCloneProgress(
           ["/usr/bin/git", "clone", "--progress",
            RECOMMENDED_REPO_URL,
-           "-b", RECOMMENDED_OP_BRANCH, "--depth=1",
+           "-b", recommended_branch, "--depth=1",
            RECOMMENDED_OP_DIR],
-          f"{RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}",
+          recommended_ref,
           RECOMMENDED_OP_DIR  # Target directory to delete before cloning
         )
       )
@@ -506,6 +509,8 @@ class PrefetchAppC4:
     but only if the target directories don't already exist.
     """
     self.clone_operations = []
+    recommended_branch = get_recommended_op_branch()
+    recommended_ref = get_recommended_install_ref()
 
     # Check if the recommended openpilot directory exists
     recommended_exists = os.path.exists(RECOMMENDED_OP_DIR)
@@ -515,9 +520,9 @@ class PrefetchAppC4:
         GitCloneProgress(
           ["/usr/bin/git", "clone", "--progress",
            RECOMMENDED_REPO_URL,
-           "-b", RECOMMENDED_OP_BRANCH, "--depth=1",
+           "-b", recommended_branch, "--depth=1",
            RECOMMENDED_OP_DIR],
-          f"{RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}",
+          recommended_ref,
           RECOMMENDED_OP_DIR  # Target directory to delete before cloning
         )
       )

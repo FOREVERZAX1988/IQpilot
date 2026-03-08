@@ -6,7 +6,7 @@ import pyray as rl
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialogV2
 from openpilot.system.ui.lib.application import gui_app
 from tsk.c4.ui import ScalableBigButton, Layout, ScrollableBigDialog
-from tsk.common.env import OPENPILOT_DIR, RECOMMENDED_OP_DIR, RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH
+from tsk.common.env import OPENPILOT_DIR, RECOMMENDED_OP_DIR, get_recommended_install_ref
 
 
 class Recommended(ScalableBigButton):
@@ -21,7 +21,7 @@ class Recommended(ScalableBigButton):
 
   @staticmethod
   def click():
-    message = f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
+    message = f"Reboot and install {get_recommended_install_ref()}?"
 
     # Show confirmation dialog with slider
     dialog = BigConfirmationDialogV2(

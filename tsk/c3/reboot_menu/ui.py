@@ -11,7 +11,7 @@ from openpilot.system.ui.lib.application import gui_app
 from tsk.c3.reboot_menu.actions import Rebooter
 from tsk.c3.ui.button import TSKButton
 from tsk.c3.ui.layout import Layout, Theme
-from tsk.common.env import RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH
+from tsk.common.env import RECOMMENDED_REPO_LABEL, get_recommended_op_branch
 from tsk.common.widget import TSKWidget
 
 
@@ -33,6 +33,8 @@ class RebootMenuUI(TSKWidget):
 
   def _create_buttons(self, rect: rl.Rectangle, header_height: float):
     """Create buttons with proper positioning based on available space."""
+    recommended_branch = get_recommended_op_branch()
+
     # rect is already the menu area (header subtracted), so pass 0 for header_height
     button_height = Layout.calculate_button_dimensions(rect.height, 0)
     start_x, start_y = Layout.calculate_button_positions(rect, 1)
@@ -45,7 +47,7 @@ class RebootMenuUI(TSKWidget):
       labels=[
         {"text": "Install", "x_offset": 70, "y_offset": 80},
         {"text": f"{RECOMMENDED_REPO_LABEL}/", "x_offset": 70, "y_offset": 180},
-        {"text": f"{RECOMMENDED_OP_BRANCH}", "x_offset": 70, "y_offset": 280},
+        {"text": recommended_branch, "x_offset": 70, "y_offset": 280},
       ],
       click_callback=self.rebooter.recommended_action,
       font_size=72,

@@ -4,7 +4,7 @@ import shutil
 import sys  # Import the sys module
 
 from tsk.c3.ui.dialog import YesNoDialog
-from tsk.common.env import is_agnos, RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH, RECOMMENDED_OP_DIR
+from tsk.common.env import RECOMMENDED_OP_DIR, get_recommended_install_ref, is_agnos
 from tsk.common.key_file_manager import KeyFileManager
 
 
@@ -20,7 +20,7 @@ class Rebooter:
 
   def recommended_action(self):
     print("Recommended button pressed")
-    question = f"Reboot and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}?"
+    question = f"Reboot and install {get_recommended_install_ref()}?"
     should_reboot = YesNoDialog.ask(question)
     if not should_reboot:
       print("Action cancelled")

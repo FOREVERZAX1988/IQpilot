@@ -1,6 +1,6 @@
 from openpilot.system.ui.lib.application import gui_app
 from tsk.c4.ui import ScalableBigButton, Layout, ScrollableBigDialog
-from tsk.common.env import RECOMMENDED_REPO_LABEL, RECOMMENDED_OP_BRANCH, is_in_car, is_cache_dir_new
+from tsk.common.env import get_recommended_install_ref, is_in_car, is_cache_dir_new
 from tsk.common.key_file_manager import KeyFileManager
 
 
@@ -19,7 +19,7 @@ class Guide(ScalableBigButton):
     if KeyFileManager().installed_key:
       text += "Security key is installed.\n\n"
       text += "If you are selling your device, run TSK Uninstaller.\n\n"
-      text += f"Otherwise, go to the Reboot Menu and install {RECOMMENDED_REPO_LABEL}/{RECOMMENDED_OP_BRANCH}."
+      text += f"Otherwise, go to the Reboot Menu and install {get_recommended_install_ref()}."
 
     else:
       if is_cache_dir_new():
