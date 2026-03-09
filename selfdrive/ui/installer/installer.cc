@@ -124,13 +124,12 @@ int doInstall() {
 
   // cleanup previous install attempts
   run("rm -rf " TMP_INSTALL_PATH);
+  run("rm -f " CONTINUE_PATH);
 
-  // do the install
-  if (util::file_exists(INSTALL_PATH) && util::file_exists(VALID_CACHE_PATH)) {
-    return cachedFetch(INSTALL_PATH);
-  } else {
-    return freshClone();
-  }
+  // Always do a fresh clone for this bootstrap installer.
+  // Reusing /data/openpilot has caused stale fork metadata and branch state to
+  // leak across installs on devices switching between repos.
+  return freshClone();
 }
 
 int freshClone() {
