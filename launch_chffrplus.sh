@@ -69,8 +69,9 @@ function launch {
   ln -sfn $(pwd) /data/pythonpath
   export PYTHONPATH="$PWD"
 
-  # hardware specific init
-  if [ -f /AGNOS ]; then
+  # The bootstrap installer should get to TSKM first and let the selected
+  # payload branch handle its own AGNOS track on the next boot.
+  if [ -f /AGNOS ] && [ ! -d "$DIR/tsk" ]; then
     agnos_init
   fi
 
